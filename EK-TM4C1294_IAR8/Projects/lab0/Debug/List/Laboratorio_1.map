@@ -1,0 +1,225 @@
+###############################################################################
+#
+# IAR ELF Linker V8.40.1.212/W32 for ARM                  22/Aug/2019  19:16:19
+# Copyright 2007-2019 IAR Systems AB.
+#
+#    Output file  =
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Exe\Laboratorio_1.out
+#    Map file     =
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\List\Laboratorio_1.map
+#    Command line =
+#        -f C:\Users\yuri_\AppData\Local\Temp\EWD253.tmp
+#        (C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Exe\driverlib.a
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Obj\mein.o
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Obj\startup_TM4C1294.o
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Obj\system_TM4C1294_TW.o
+#        --no_out_extension -o
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Exe\Laboratorio_1.out
+#        --map
+#        C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\List\Laboratorio_1.map
+#        --config "D:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.3\arm\config\linker\TexasInstruments\TM4C1294NC.icf" --semihosting
+#        --entry __iar_program_start --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because no calls to memory allocation
+functions were found in the application outside of system library
+functions, and there are calls to deallocation functions in the
+application.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at address 0x0 { ro section .intvec };
+"P1":  place in [from 0x0 to 0xf'ffff] { ro };
+define block CSTACK with size = 32K, alignment = 8 { };
+define block HEAP with size = 64K, alignment = 8 { };
+"P2":  place in [from 0x2000'0000 to 0x2003'ffff] {
+          rw, block CSTACK, block HEAP };
+
+  Section          Kind         Address    Size  Object
+  -------          ----         -------    ----  ------
+"A0":                                     0x3c0
+  .intvec          ro code          0x0   0x3c0  startup_TM4C1294.o [1]
+                                - 0x3c0   0x3c0
+
+"P1":                                     0x868
+  .text            ro code        0x3c0   0x29c  sysctl.o [3]
+  .rodata          const          0x65c   0x1b0  sysctl.o [3]
+  .text            ro code        0x80c   0x16e  gpio.o [3]
+  .text            ro code        0x97a    0x3a  zero_init3.o [4]
+  .text            ro code        0x9b4   0x10c  mein.o [1]
+  .rodata          const          0xac0    0x6c  sysctl.o [3]
+  .rodata          const          0xb2c    0x30  sysctl.o [3]
+  .text            ro code        0xb5c    0x2c  system_TM4C1294_TW.o [1]
+  .text            ro code        0xb88    0x28  data_init.o [4]
+  .iar.init_table  const          0xbb0    0x10  - Linker created -
+  .text            ro code        0xbc0    0x1e  cmain.o [4]
+  .text            ro code        0xbde     0x4  low_level_init.o [2]
+  .text            ro code        0xbe2     0x4  exit.o [2]
+  .text            ro code        0xbe6     0x2  startup_TM4C1294.o [1]
+  .text            ro code        0xbe8     0xa  cexit.o [4]
+  .text            ro code        0xbf4    0x14  exit.o [5]
+  .text            ro code        0xc08    0x14  startup_TM4C1294.o [1]
+  .text            ro code        0xc1c     0xc  cstartup_M.o [4]
+  .rodata          const          0xc28     0x0  zero_init3.o [4]
+                                - 0xc28   0x868
+
+"P2", part 1 of 2:                          0x4
+  .bss             zero     0x2000'0000     0x1  mein.o [1]
+  .bss             zero     0x2000'0001     0x1  mein.o [1]
+                          - 0x2000'0002     0x2
+
+"P2", part 2 of 2:                       0x8004
+  .noinit          uninit   0x2000'0004     0x4  system_TM4C1294_TW.o [1]
+  CSTACK                    0x2000'0008  0x8000  <Block>
+    CSTACK         uninit   0x2000'0008  0x8000  <Block tail>
+                          - 0x2000'8008  0x8004
+
+Unused ranges:
+
+         From           To      Size
+         ----           --      ----
+        0xc28     0xf'ffff  0xf'f3d8
+  0x2000'8008  0x2003'ffff  0x3'7ff8
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address      Size
+          -------      ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x2:
+          0x2000'0000   0x2
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module                ro code  ro data  rw data
+    ------                -------  -------  -------
+command line/config:
+    -----------------------------------------------
+    Total:
+
+C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Obj: [1]
+    mein.o                    268                 2
+    startup_TM4C1294.o        982
+    system_TM4C1294_TW.o       44                 4
+    -----------------------------------------------
+    Total:                  1'294                 6
+
+dl7M_tln.a: [2]
+    exit.o                      4
+    low_level_init.o            4
+    -----------------------------------------------
+    Total:                      8
+
+driverlib.a: [3]
+    gpio.o                    366
+    sysctl.o                  668      588
+    -----------------------------------------------
+    Total:                  1'034      588
+
+rt7M_tl.a: [4]
+    cexit.o                    10
+    cmain.o                    30
+    cstartup_M.o               12
+    data_init.o                40
+    zero_init3.o               58
+    -----------------------------------------------
+    Total:                    150
+
+shb_l.a: [5]
+    exit.o                     20
+    -----------------------------------------------
+    Total:                     20
+
+    Gaps                        2
+    Linker created                      16   32'768
+---------------------------------------------------
+    Grand Total:            2'508      604   32'774
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                       Address   Size  Type      Object
+-----                       -------   ----  ----      ------
+.iar.init_table$$Base         0xbb0          --   Gb  - Linker created -
+.iar.init_table$$Limit        0xbc0          --   Gb  - Linker created -
+?main                         0xbc1         Code  Gb  cmain.o [4]
+CSTACK$$Base            0x2000'0008          --   Gb  - Linker created -
+CSTACK$$Limit           0x2000'8008          --   Gb  - Linker created -
+GPIODirModeSet                0x80d   0x28  Code  Gb  gpio.o [3]
+GPIOPadConfigSet              0x835  0x102  Code  Gb  gpio.o [3]
+GPIOPinTypeGPIOInput          0x943   0x14  Code  Gb  gpio.o [3]
+GPIOPinTypeGPIOOutput         0x957    0xa  Code  Gb  gpio.o [3]
+GPIOPinWrite                  0x937    0x8  Code  Gb  gpio.o [3]
+LED_D1                  0x2000'0000    0x1  Data  Gb  mein.o [1]
+LED_D2                  0x2000'0001    0x1  Data  Gb  mein.o [1]
+Region$$Table$$Base           0xbb0          --   Gb  - Linker created -
+Region$$Table$$Limit          0xbc0          --   Gb  - Linker created -
+SysCtlClockFreqSet            0x421  0x1fc  Code  Gb  sysctl.o [3]
+SysCtlPeripheralEnable        0x403    0x8  Code  Gb  sysctl.o [3]
+SysCtlPeripheralReady         0x3e1    0x8  Code  Gb  sysctl.o [3]
+SysTick_Handler               0x9b5   0x18  Code  Gb  mein.o [1]
+SystemCoreClock         0x2000'0004    0x4  Data  Gb  system_TM4C1294_TW.o [1]
+SystemInit                    0xb5d   0x1a  Code  Gb  system_TM4C1294_TW.o [1]
+_SysCtlMemTimingGet           0x3c1   0x20  Code  Lc  sysctl.o [3]
+__Vectors                       0x0          --   Gb  startup_TM4C1294.o [1]
+__Vectors_End                 0x3c0         Data  Gb  startup_TM4C1294.o [1]
+__Vectors_Size {Abs}          0x3c0          --   Gb  startup_TM4C1294.o [1]
+__cmain                       0xbc1         Code  Gb  cmain.o [4]
+__exit                        0xbf5   0x14  Code  Gb  exit.o [5]
+__iar_data_init3              0xb89   0x28  Code  Gb  data_init.o [4]
+__iar_init_vfp                0xc11         Code  Wk  startup_TM4C1294.o [1]
+__iar_program_start           0xc1d         Code  Gb  cstartup_M.o [4]
+__iar_zero_init3              0x97b   0x3a  Code  Gb  zero_init3.o [4]
+__low_level_init              0xbdf    0x4  Code  Gb  low_level_init.o [2]
+__vector_table                  0x0         Data  Gb  startup_TM4C1294.o [1]
+__vector_table_0x1c            0x1c         Data  Gb  startup_TM4C1294.o [1]
+_call_main                    0xbcd         Code  Gb  cmain.o [4]
+_exit                         0xbe9         Code  Gb  cexit.o [4]
+_main                         0xbdb         Code  Gb  cmain.o [4]
+exit                          0xbe3    0x4  Code  Gb  exit.o [2]
+g_pppui32XTALtoVCO            0x65c  0x1b0  Data  Lc  sysctl.o [3]
+g_pui32VCOFrequencies         0x654    0x8  Data  Lc  sysctl.o [3]
+g_pui32Xtals                  0xac0   0x6c  Data  Lc  sysctl.o [3]
+g_sXTALtoMEMTIM               0xb2c   0x30  Data  Lc  sysctl.o [3]
+main                          0x9cd   0xd0  Code  Gb  mein.o [1]
+
+
+[1] = C:\Users\yuri_\Desktop\embarcados\EK-TM4C1294_IAR8\Projects\lab1\Debug\Obj
+[2] = dl7M_tln.a
+[3] = driverlib.a
+[4] = rt7M_tl.a
+[5] = shb_l.a
+
+   2'508 bytes of readonly  code memory
+     604 bytes of readonly  data memory
+  32'774 bytes of readwrite data memory
+
+Errors: none
+Warnings: none
