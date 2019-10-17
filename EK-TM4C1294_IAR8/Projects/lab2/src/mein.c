@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <intrinsics.h>
 // includes da biblioteca driverlib
 #include "inc/hw_memmap.h"
 #include "inc/hw_ints.h"
@@ -16,10 +17,12 @@
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
-#include "driverlib/uart.h"
+#include "driverlib/uart.h"  
 #include "driverlib/timer.h"
 #include "driverlib/interrupt.h"
 #include "system_TM4C1294.h"
+
+uint32_t c;
 
 //delay em ms (aproximado)
 void sys_delay(uint32_t temp)
@@ -35,13 +38,26 @@ void sys_delay(uint32_t temp)
   {}
 }
 
-void Timer2IntHandler(void)
+void TIMER2A_Handler(void)
 {
     //
     // Clear the timer interrupt.
     //
     //
+    c = TimerValueGet(TIMER2_BASE, TIMER_A);
     TimerIntClear(TIMER2_BASE, TIMER_CAPA_EVENT);
+//TODO: verificar fontes de interrupção, implementar verificação de estouro de timer (incrementar variavel) 
+
+
+}
+
+void TIMER2B_Handler(void)
+{
+    //
+    // Clear the timer interrupt.
+    //
+    //
+    TimerIntClear(TIMER2_BASE, TIMER_CAPB_EVENT);
 //TODO: verificar fontes de interrupção, implementar verificação de estouro de timer (incrementar variavel) 
 
 
@@ -139,7 +155,7 @@ void main(void){
   // Set the pin to use the internal pull-up.
   //
   //
-  GPIOPadConfigSet(GPIO_PORTM_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD);
+  //GPIOPadConfigSet(GPIO_PORTM_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD);
 
   //
   // Enable processor interrupts.
@@ -154,13 +170,14 @@ void main(void){
   TimerControlEvent(TIMER2_BASE, TIMER_A, TIMER_EVENT_POS_EDGE); //borda positiva
   TimerControlEvent(TIMER2_BASE, TIMER_B, TIMER_EVENT_NEG_EDGE); //borda negativa
   
-  TimerLoadSet(TIMER2_BASE, TIMER_A, 0);
-  TimerLoadSet(TIMER2_BASE, TIMER_B, 0);
+//  TimerLoadSet(TIMER2_BASE, TIMER_A, 0);
+//  TimerLoadSet(TIMER2_BASE, TIMER_B, 0);
 
   //
   // Setup the interrupt for the edge capture timer.
   // 
-  IntEnable(INT_TIMER2A | INT_TIMER2B);
+  IntEnable(INT_TIMER2A);
+  IntEnable(INT_TIMER2B);
   TimerIntEnable(TIMER2_BASE, TIMER_CAPA_EVENT | TIMER_TIMA_TIMEOUT);
   TimerIntEnable(TIMER2_BASE, TIMER_CAPB_EVENT | TIMER_TIMB_TIMEOUT);
 
@@ -197,7 +214,7 @@ void main(void){
   UART_send_string("inicio", 6);
   UART_send_string("\r\n", 2);
 
-
+  __enable_interrupt();
   while(1)
   { 
    

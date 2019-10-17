@@ -21,9 +21,8 @@ rule browsedata
 
 #Build steps
 build mein.pbi : index mein.xcl
-build system_TM4C1294.pbi : index system_TM4C1294.xcl
 build system_TM4C1294_TW.pbi : index system_TM4C1294_TW.xcl
-build lab2.pbd : link mein.pbi system_TM4C1294.pbi system_TM4C1294_TW.pbi
+build lab2.pbd : link mein.pbi system_TM4C1294_TW.pbi
 build lab2.pbw : browsedata lab2.pbd
 
 
