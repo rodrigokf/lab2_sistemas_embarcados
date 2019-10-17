@@ -1,3 +1,9 @@
+/* Rodrigo Friesen
+*  Yuri Andreiko
+*
+* Laboratorio 2 - Sistemas embarcados  criado em 09/10/2019
+*
+*/
 #define PART_TM4C1294NCPDT
 
 #include <stdint.h>
@@ -191,9 +197,6 @@ void main(void){
   UART_send_string("inicio", 6);
   UART_send_string("\r\n", 2);
 
-  uint8_t entrada = 1;  //variável que recebe a leitura do pino de sinal
- 
-  uint32_t th = 0, tl = 0; //th = tempo high, tl = tempo low
 
   while(1)
   { 

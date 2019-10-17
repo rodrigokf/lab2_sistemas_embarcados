@@ -1,22 +1,22 @@
-"C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\cpu.c"
+"C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\cpu.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Obj\cpu.pbi.dep
+C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Obj\cpu.pbi.dep
 -o
 cpu.pbi
 -I
-C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib
+C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib
 -I
-C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\..
+C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\..
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -I
-C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
+C:\Users\yuri_\Desktop\Sistemas Embarcados\lab2_sistemas_embarcados\lab2_sistemas_embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
