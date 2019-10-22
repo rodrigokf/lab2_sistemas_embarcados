@@ -21,11 +21,14 @@
 #include "driverlib/timer.h"
 #include "driverlib/interrupt.h"
 #include "system_TM4C1294.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/systick.h"
 
-uint32_t vetor[3] = {0,0xFFFF,0xFFFF};
+uint32_t vetor[3] = {0,0,0};
 uint32_t tempoSubida = 0;
 uint32_t tempoDescida = 0;
-uint32_t intStatus;
+uint32_t contadorTimeOut_subida = 0;
+uint32_t contadorTimeOut_descida = 0;
 
 //delay em ms (aproximado)
 void sys_delay(uint32_t temp)
@@ -41,37 +44,40 @@ void sys_delay(uint32_t temp)
 
 void TIMER2A_Handler(void)
 {
-    intStatus = TimerIntStatus(TIMER2_BASE, false);
-
     //
     // Clear the timer interrupt.
-    //
-    //
-    vetor[0] = TimerValueGet(TIMER2_BASE, TIMER_A);
-    if(vetor[1] < vetor[0])
-    {
-      vetor[1] += 0xFFFF;
-    
-    }
-    tempoSubida = vetor[0] - vetor[1];
-    vetor[1] = vetor[0];
     TimerIntClear(TIMER2_BASE, TIMER_CAPA_EVENT);
+    
+    contadorTimeOut_subida = 0;
+    
+    vetor[0] = TimerValueGet(TIMER2_BASE, TIMER_A);
+    if(vetor[0] > vetor[1])
+    {
+      tempoSubida = vetor[0] - vetor[1];
+    }
+    else
+      tempoSubida = vetor[0] + 0xFFFF - vetor[1];
+    
+    vetor[1] = vetor[0];
+    
 //TODO: verificar fontes de interrupção, implementar verificação de estouro de timer (incrementar variavel) 
 }
 
 void TIMER2B_Handler(void)
 {
-    vetor[2] = TimerValueGet(TIMER2_BASE, TIMER_B);
-    if(vetor[2] < vetor[0])
-    {
-      vetor[2] += 0xFFFF;
-    }
-    tempoDescida = vetor[2] - vetor[0];
-    //
     // Clear the timer interrupt.
-    //
-    //
     TimerIntClear(TIMER2_BASE, TIMER_CAPB_EVENT);
+    
+    contadorTimeOut_descida = 0;
+    
+    vetor[2] = TimerValueGet(TIMER2_BASE, TIMER_B);
+    if(vetor[2] > vetor[0])
+    {
+      tempoDescida = vetor[2] - vetor[0];
+    }
+    else
+      tempoDescida = vetor[2] + 0xFFFF - vetor[0];
+   
 //TODO: verificar fontes de interrupção, implementar verificação de estouro de timer (incrementar variavel) 
 }
 
@@ -84,25 +90,37 @@ void UART_send_string(uint8_t *string, uint16_t qtd)
 
 void calculo_tempo(uint32_t tl_copy, uint32_t th_copy)
 {
-  uint64_t periodo;
   uint64_t duty_cycle;
   uint64_t frequencia;
-  uint64_t frequencia2;
-  uint64_t tl;
-  uint64_t th;
   uint8_t c = 0;
+  uint16_t offset = 0;
   
   uint8_t duty[3]; //vetor para converter para caracteres
   uint8_t freq[6]; //vetor para converter para caracteres
-  uint8_t freq2[6]; //vetor para converter para caracteres
+  
 
-  tempoSubida = tempoSubida * 8333;
-  tempoDescida = tempoDescida * 8333;
   
-  frequencia = 10000000000000/(tempoSubida*833333);
+  if(contadorTimeOut_subida > 1000000 || contadorTimeOut_descida > 1000000)
+  {
+    frequencia = 0;
+    if(contadorTimeOut_subida < contadorTimeOut_descida)
+    {
+      duty_cycle = 99999;
+    }
+    else
+    {
+      duty_cycle = 0;
+    }
+  }
+  else
+  {
+    frequencia = (uint64_t)100000000000/(tempoSubida * 8333); //nanosegundos *1000;
+    offset = (frequencia/10);
   
-  
-  duty_cycle = (tempoDescida/tempoSubida)*100;
+    duty_cycle = (uint64_t)((tempoDescida)*100000);
+    duty_cycle /= (uint64_t)tempoSubida;
+    duty_cycle += offset;
+  }
   
   //etapa que converte valor decimal para caractres ASCII
   freq[0] = (frequencia/100000);     //milhão
@@ -145,13 +163,46 @@ void calculo_tempo(uint32_t tl_copy, uint32_t th_copy)
   UART_send_string(&duty[2], 1);
   UART_send_string("%", 1);
   UART_send_string("\r\n", 2);
-  
-  //espera cerca de 2 segundos para fazer nova medição
-  sys_delay(2000);
 } 
+
+void SysTick_Handler(void)
+{
+  calculo_tempo(0,0);
+} // SysTick_Handler
 
 void main(void)
 {
+  __disable_interrupt();
+  //
+  // HABILITA UART0.
+  //
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+  sys_delay(10);
+
+  //
+  // Set GPIO A0 and A1 as UART pins.
+  //
+  GPIOPinConfigure(GPIO_PA0_U0RX);
+  GPIOPinConfigure(GPIO_PA1_U0TX);
+  GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+  sys_delay(10);
+
+  //
+  // Configure the UART for 115,200, 8-N-1 operation.
+  //
+  UARTConfigSetExpClk(UART0_BASE, SystemCoreClock , 115200,
+                          (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
+                           UART_CONFIG_PAR_NONE));
+  sys_delay(5);
+  UART_send_string("inicio", 6);
+  UART_send_string("\r\n", 2);
+  
+  SysTickPeriodSet(4290000000); // f = 1Hz para clock = 24MHz
+  
+  SysTickIntEnable();
+  SysTickEnable();
+  
   //
   // Enable the peripherals used by this example.
   //
@@ -180,7 +231,7 @@ void main(void)
   //
   // Enable processor interrupts.
   //
-  IntMasterEnable();
+  //IntMasterEnable();
   
   //
   // Configure the timers in both edges count mode.
@@ -200,43 +251,19 @@ void main(void)
   IntEnable(INT_TIMER2B);
   TimerIntEnable(TIMER2_BASE, TIMER_CAPA_EVENT | TIMER_TIMA_TIMEOUT);
   TimerIntEnable(TIMER2_BASE, TIMER_CAPB_EVENT | TIMER_TIMB_TIMEOUT);
-
+ 
   //
   // Enable the timer.
   //
   //
   TimerEnable(TIMER2_BASE, TIMER_A);
   TimerEnable(TIMER2_BASE, TIMER_B);
-    
-  //
-  // HABILITA UART0.
-  //
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-  sys_delay(10);
-
-  //
-  // Set GPIO A0 and A1 as UART pins.
-  //
-  GPIOPinConfigure(GPIO_PA0_U0RX);
-  GPIOPinConfigure(GPIO_PA1_U0TX);
-  GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-  sys_delay(10);
-
-  //
-  // Configure the UART for 115,200, 8-N-1 operation.
-  //
-  UARTConfigSetExpClk(UART0_BASE, SystemCoreClock , 115200,
-                          (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
-                           UART_CONFIG_PAR_NONE));
-  sys_delay(5);
-  UART_send_string("inicio", 6);
-  UART_send_string("\r\n", 2);
-
+  
   __enable_interrupt();
   while(1)
   { 
-    calculo_tempo(0,0);
+    contadorTimeOut_subida++;
+    contadorTimeOut_descida++;
   }
    
     
